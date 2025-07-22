@@ -1,24 +1,30 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 
 export type ProductDocument = Product & Document;
 
 @Schema({ timestamps: true })
 export class Product {
-  @Prop({ required: true })
-  name: string;
+  @Prop({ type: String, required: true })
+  name_uz: string;
 
-  @Prop()
-  description?: string;
+  @Prop({ type: String, required: true })
+  name_ru: string;
+
+  @Prop({ type: String })
+  description_uz?: string;
+
+  @Prop({ type: String })
+  description_ru?: string;
 
   @Prop({ type: [String], default: [] })
   images_urls: string[]; // Rasm URLlar
 
   @Prop({ required: true })
-  price: number;
+  price_uzs: number;
 
-  @Prop()
-  category?: string;
+  @Prop({ type: Types.ObjectId, ref: 'ProductCategory', required: true })
+  category: string;
 
   @Prop()
   brand?: string;

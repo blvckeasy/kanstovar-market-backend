@@ -9,22 +9,33 @@ import {
 
 export class CreateProductDto {
   @IsString()
-  name: string;
+  @Type(() => String)
+  name_uz: string;
+
+  @IsString()
+  @Type(() => String)
+  name_ru: string;
 
   @IsOptional()
   @IsString()
-  description?: string;
+  @Type(() => String)
+  description_uz?: string;
+
+  @IsOptional()
+  @IsString()
+  @Type(() => String)
+  description_ru?: string;
 
   @Type(() => Number)
   @IsNumber()
-  price: number;
+  price_uzs: number;
 
   @IsOptional()
   @IsString()
   category?: string;
 
-  @IsString()
   @IsOptional()
+  @IsString()
   brand?: string;
 
   @IsOptional()
@@ -34,5 +45,6 @@ export class CreateProductDto {
 
   @IsOptional()
   @IsArray()
-  tags?: string[]; // "daftar", "ruchka", "idish" va h.k.
+  @IsString({ each: true })
+  tags?: string[];
 }

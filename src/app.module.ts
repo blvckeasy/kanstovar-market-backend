@@ -1,15 +1,39 @@
 import { Module } from '@nestjs/common';
-import { ProductModule } from './modules/product/product.module';
 import { MongooseModule } from '@nestjs/mongoose';
-import { AdminModule } from './modules/admin/admin.module';
+import {
+  AdminModule,
+  CustomerModule,
+  TelegramModule,
+  ProductModule,
+  OrdersModule,
+} from './modules';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { join } from 'path';
+import { configuration } from './core';
+
+console.log(join(process.cwd(), 'environments', `.env.${process.env.NODE_ENV}`));
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://localhost:27017/kanstovar'),
-    ProductModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: join(process.cwd(), 'environments', `.env.${process.env.NODE_ENV}`),
+      load: [configuration],
+    }),
+
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        uri: configService.get<string>('database.mongodb_connection_url'),
+      }),
+      inject: [ConfigService],
+    }),
+
     AdminModule,
+    CustomerModule,
+    OrdersModule,
+    ProductModule,
+    TelegramModule,
   ],
-  controllers: [],
-  providers: [],
 })
 export class AppModule {}
