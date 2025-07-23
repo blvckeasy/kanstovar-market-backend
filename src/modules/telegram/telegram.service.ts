@@ -4,6 +4,7 @@ import { CreateCustomerDto, CustomerService } from '../customer';
 import { CustomerSessionData } from 'src/core';
 import { plainToInstance } from 'class-transformer';
 import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class TelegramService {
@@ -15,6 +16,7 @@ export class TelegramService {
     // private readonly customerModel: Model<CustomerDocument>,
     private readonly customerService: CustomerService,
     private readonly configService: ConfigService,
+    private readonly jwtService: JwtService,
   ) {}
 
   private async sleep(ms: number): Promise<void> {
@@ -63,7 +65,8 @@ export class TelegramService {
           chat_id,
         });
       } else {
-        ctx.reply('URL: https://localhost:4200/frontend?token=ey.....');
+        const token = await this.jwtService.signAsync(customer.toObject());
+        ctx.reply(`URL: https://myapp.vercel.app/frontend?token=${token}`);
       }
     });
 
@@ -105,7 +108,12 @@ export class TelegramService {
         customer = await this.customerService.create(dto);
       }
 
-      ctx.reply('URL: https://localhost:4200/frontend?token=ey.....');
+      const token = await this.jwtService.signAsync(customer.toObject());
+
+      ctx.reply(
+        `<a href='https://myapp.vercel.app/frontend?token=${token}'>Shu link ustiga bosing.</a>`,
+        { parse_mode: 'HTML' },
+      );
     });
 
     await this.bot.init();

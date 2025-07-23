@@ -12,4 +12,7 @@ export default () => ({
       webhookURL: process.env.TELEGRAM_WEBHOOK_URL,
     },
   },
+  jwt: {
+    secret: process.env.JWT_SECRET_KEY || '4a4840defdc27585be',
+  },
 });

@@ -5,13 +5,12 @@ import {
   CustomerModule,
   TelegramModule,
   ProductModule,
-  OrdersModule,
+  OrderModule,
 } from './modules';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { join } from 'path';
 import { configuration } from './core';
-
-console.log(join(process.cwd(), 'environments', `.env.${process.env.NODE_ENV}`));
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -29,9 +28,17 @@ console.log(join(process.cwd(), 'environments', `.env.${process.env.NODE_ENV}`))
       inject: [ConfigService],
     }),
 
+    JwtModule.registerAsync({
+      global: true,
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.get<string>('jwt.secret'),
+      }),
+      inject: [ConfigService]
+    }),
+
     AdminModule,
     CustomerModule,
-    OrdersModule,
+    OrderModule,
     ProductModule,
     TelegramModule,
   ],
