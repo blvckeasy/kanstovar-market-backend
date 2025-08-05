@@ -16,7 +16,11 @@ import { JwtModule } from '@nestjs/jwt';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: join(process.cwd(), 'environments', `.env.${process.env.NODE_ENV}`),
+      envFilePath: join(
+        process.cwd(),
+        'environments',
+        `.env.${process.env.NODE_ENV}`,
+      ),
       load: [configuration],
     }),
 
@@ -33,7 +37,7 @@ import { JwtModule } from '@nestjs/jwt';
       useFactory: (configService: ConfigService) => ({
         secret: configService.get<string>('jwt.secret'),
       }),
-      inject: [ConfigService]
+      inject: [ConfigService],
     }),
 
     AdminModule,

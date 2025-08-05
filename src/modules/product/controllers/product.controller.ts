@@ -34,8 +34,6 @@ export class ProductController {
     @UploadedFiles() images: Array<Express.Multer.File>,
     @Body() dto: CreateProductDto,
   ) {
-    console.log(dto);
-
     const images_urls: string[] =
       await this.fileService.uploadProductImages(images);
 
