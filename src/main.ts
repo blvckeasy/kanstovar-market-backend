@@ -16,7 +16,7 @@ import { ValidationError } from 'class-validator';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-    logger: false,
+    // logger: false,
   });
 
   app.enableCors({
@@ -53,7 +53,7 @@ async function bootstrap() {
     }),
   );
 
-  app.useStaticAssets(join(process.cwd(), 'Uploads'), {
+  app.useStaticAssets(join(process.cwd(), 'uploads'), {
     prefix: '/static/',
   });
 
